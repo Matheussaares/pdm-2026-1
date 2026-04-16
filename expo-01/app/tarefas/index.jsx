@@ -11,11 +11,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// Importamos as novas funções que criamos no back4app/index.js
-import { adicionarTarefa, getTarefas, atualizarTarefa, removerTarefa } from "@/back4app";
+import { useRouter } from "expo-router"; 
+// Importamos as funções da pasta api
+import { adicionarTarefa, getTarefas, atualizarTarefa, removerTarefa } from "@/api";
 
 export default function TarefasPage() {
   const queryClient = useQueryClient();
+  const router = useRouter(); 
   const [descricao, setDescricao] = useState("");
 
   // QUERY - Buscar tarefas
@@ -53,7 +55,7 @@ export default function TarefasPage() {
       Alert.alert("Descrição inválida", "Preencha a descrição da tarefa");
       return;
     }
-    // Ao adicionar, garantimos que ela comece como falsa
+    // Envia a descrição, que o seu api/index.js vai converter para 'text'
     mutation.mutate({ descricao, concluida: false });
     setDescricao("");
   }
@@ -81,22 +83,29 @@ export default function TarefasPage() {
 
       <View style={styles.tasksContainer}>
         {data?.map((t) => (
-          <View key={t.objectId} style={styles.taskItem}>
+          <View key={t.id || t.objectId} style={styles.taskItem}>
             <View style={styles.taskTextContainer}>
               <Switch
                 value={t.concluida}
                 onValueChange={(valor) =>
-                  mutationUpdate.mutate({ id: t.objectId, concluida: valor })
+                  mutationUpdate.mutate({ id: t.id || t.objectId, concluida: valor })
                 }
               />
-              <Text style={[styles.taskText, t.concluida && styles.strikethroughText]}>
-                {t.descricao}
-              </Text>
+              
+              {/* Ajuste realizado aqui: t.text || t.descricao */}
+              <TouchableOpacity 
+                style={{ flex: 1 }} 
+                onPress={() => router.push(`/tarefas/${t.id || t.objectId}`)}
+              >
+                <Text style={[styles.taskText, t.concluida && styles.strikethroughText]}>
+                  {t.text || t.descricao}
+                </Text>
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity 
               style={styles.deleteButton} 
-              onPress={() => mutationDelete.mutate(t.objectId)}
+              onPress={() => mutationDelete.mutate(t.id || t.objectId)}
             >
               <Text style={styles.deleteButtonText}>Excluir</Text>
             </TouchableOpacity>
