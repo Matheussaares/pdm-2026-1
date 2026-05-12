@@ -55,7 +55,6 @@ export default function TarefasPage() {
       Alert.alert("Descrição inválida", "Preencha a descrição da tarefa");
       return;
     }
-    // Envia a descrição, que o seu api/index.js vai converter para 'text'
     mutation.mutate({ descricao, concluida: false });
     setDescricao("");
   }
@@ -81,6 +80,8 @@ export default function TarefasPage() {
 
       <View style={styles.hr} />
 
+      {/* O botão "Ir para Gosto / Não Gosto" foi removido daqui para evitar repetição */}
+
       <View style={styles.tasksContainer}>
         {data?.map((t) => (
           <View key={t.id || t.objectId} style={styles.taskItem}>
@@ -92,7 +93,6 @@ export default function TarefasPage() {
                 }
               />
               
-              {/* Ajuste realizado aqui: t.text || t.descricao */}
               <TouchableOpacity 
                 style={{ flex: 1 }} 
                 onPress={() => router.push(`/tarefas/${t.id || t.objectId}`)}
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "#eee",
     width: "100%",
-    marginVertical: 20,
+    marginVertical: 15,
   },
   tasksContainer: {
     width: "100%",
