@@ -30,10 +30,10 @@ export default function GostoNaoGosto() {
 
         <View style={styles.dropZones}>
           <View style={styles.dropZone}>
-            <Text style={styles.zoneTitle}>👍 Gosto</Text>
+            <Text style={styles.zoneTitle}>👎 Não Gosto</Text> 
           </View>
           <View style={[styles.dropZone, { backgroundColor: "#FFE66D" }]}>
-            <Text style={styles.zoneTitle}>👎 Não Gosto</Text>
+            <Text style={styles.zoneTitle}>👍 Gosto</Text>
           </View>
         </View>
       </SafeAreaView>
